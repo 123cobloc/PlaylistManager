@@ -1,0 +1,40 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.5.33516.290
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PlaylistManager.API", "PlaylistManager\PlaylistManager.API.csproj", "{D80B3297-875A-47BF-BE98-A2DFD2684985}"
+	ProjectSection(ProjectDependencies) = postProject
+		{6EA2C9CF-83D6-4F34-A2E5-5B61ED862BEC} = {6EA2C9CF-83D6-4F34-A2E5-5B61ED862BEC}
+	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PlaylistManager.Services", "PlaylistManager.Services\PlaylistManager.Services.csproj", "{24C237AC-CD2E-4A60-B2F1-96860A2695EA}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PlaylistManager.Data", "PlaylistManager.Data\PlaylistManager.Data.csproj", "{6EA2C9CF-83D6-4F34-A2E5-5B61ED862BEC}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{D80B3297-875A-47BF-BE98-A2DFD2684985}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D80B3297-875A-47BF-BE98-A2DFD2684985}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D80B3297-875A-47BF-BE98-A2DFD2684985}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D80B3297-875A-47BF-BE98-A2DFD2684985}.Release|Any CPU.Build.0 = Release|Any CPU
+		{24C237AC-CD2E-4A60-B2F1-96860A2695EA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{24C237AC-CD2E-4A60-B2F1-96860A2695EA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{24C237AC-CD2E-4A60-B2F1-96860A2695EA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{24C237AC-CD2E-4A60-B2F1-96860A2695EA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6EA2C9CF-83D6-4F34-A2E5-5B61ED862BEC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6EA2C9CF-83D6-4F34-A2E5-5B61ED862BEC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6EA2C9CF-83D6-4F34-A2E5-5B61ED862BEC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6EA2C9CF-83D6-4F34-A2E5-5B61ED862BEC}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {D52D15AF-BBA7-43DB-86D4-F85F7EE68998}
+	EndGlobalSection
+EndGlobal
