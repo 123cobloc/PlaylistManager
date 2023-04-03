@@ -6,7 +6,8 @@ EXPOSE 80
 EXPOSE 443
 
 FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
-COPY ["PlaylistManager/PlaylistManager.csproj", "PlaylistManager/"]
+WORKDIR /src
+COPY ["PlaylistManager.csproj", "PlaylistManager/"]
 RUN dotnet restore "PlaylistManager/PlaylistManager.csproj"
 COPY . .
 WORKDIR "/src/PlaylistManager"
