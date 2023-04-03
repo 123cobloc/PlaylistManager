@@ -13,7 +13,7 @@ variables:
   dockerRegistryServiceConnection: '7b278da2-c215-42c2-9438-f55496bca4ca'
   imageRepository: 'playlistmanager'
   containerRegistry: 'playlistmanager.azurecr.io'
-  dockerfilePath: '$(Build.SourcesDirectory)/PlaylistManager/Dockerfile'
+  dockerfilePath: '$(Build.SourcesDirectory)/Dockerfile'
   tag: '$(Build.BuildId)'
 
   # Agent VM image name
