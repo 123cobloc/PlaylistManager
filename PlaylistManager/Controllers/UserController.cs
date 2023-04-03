@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using PlaylistManager.Data.FromSpotify;
 using PlaylistManager.Services;
 
-namespace PlaylistManager.API.Controllers
+namespace PlaylistManager.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]

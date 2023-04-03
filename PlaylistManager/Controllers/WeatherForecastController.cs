@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 
-namespace PlaylistManager.API.Controllers
+namespace PlaylistManager.Controllers
 {
     [ApiController]
     [Route("[controller]")]

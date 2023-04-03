@@ -1,4 +1,4 @@
-namespace PlaylistManager.API
+namespace PlaylistManager
 {
     public class WeatherForecast
     {

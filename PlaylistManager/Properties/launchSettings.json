@@ -1,6 +1,6 @@
 {
   "profiles": {
-    "PlaylistManager.API": {
+    "PlaylistManager": {
       "commandName": "Project",
       "launchBrowser": true,
       "launchUrl": "swagger",
