@@ -6,6 +6,7 @@ namespace PlaylistManager.Services
     {
         string GenerateLoginUrl(string codeVerifier);
         Token GetToken(string authorizationCode, string codeVerifier);
+        Token RefreshToken(string refreshToken);
         User GetMe(string token);
     }
 }

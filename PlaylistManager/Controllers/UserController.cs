@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using PlaylistManager.Data.FromSpotify;
+using PlaylistManager.Data.ToPlaylistManager;
 using PlaylistManager.Services;
 
 namespace PlaylistManager.API.Controllers
@@ -22,12 +22,25 @@ namespace PlaylistManager.API.Controllers
             return codeVerifier.Length == 128 ? Ok(_userService.GenerateLoginUrl(codeVerifier)) : BadRequest("Invalid codeVerifier");
         }
 
-        [HttpGet("login")]
+        [HttpGet("token")]
         public ActionResult<Token> GetToken(string authorizationCode, string codeVerifier)
         {
             try
             {
                 return Ok(_userService.GetToken(authorizationCode, codeVerifier));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpGet("refreshToken")]
+        public ActionResult<Token> RefreshToken(string refreshToken)
+        {
+            try
+            {
+                return Ok(_userService.RefreshToken(refreshToken));
             }
             catch (Exception ex)
             {

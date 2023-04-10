@@ -10,7 +10,7 @@
         {
             AccessToken = token.access_token;
             RefreshToken = token.refresh_token;
-            Expires = DateTimeOffset.UtcNow.AddSeconds(token.expires_in - 1).ToUnixTimeMilliseconds();
+            Expires = DateTimeOffset.UtcNow.AddSeconds(token.expires_in - 10).ToUnixTimeMilliseconds();
         }
     }
 }

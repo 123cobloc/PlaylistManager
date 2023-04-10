@@ -13,6 +13,7 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddEndpointsApiExplorer();
 
 builder.Services.AddSingleton<UserService>();
+builder.Services.AddSingleton<PlaylistService>();
 
 var app = builder.Build();
 

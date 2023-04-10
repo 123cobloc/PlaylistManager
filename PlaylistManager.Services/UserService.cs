@@ -23,7 +23,7 @@ namespace PlaylistManager.Services
             string baseUrl = "https://accounts.spotify.com/authorize";
             string responseType = "code";
             string clientId = "8ebd57c9f29644fda8054ad400676c43";
-            string scope = "user-read-private user-read-email";
+            string scope = "user-read-private user-read-email playlist-read-private playlist-modify-public playlist-modify-private";
             string redirectUri = "http://localhost:8888/callback";
             string state = GenerateRandomString(16);
             string codeChallengeMethod = "S256";
@@ -41,6 +41,26 @@ namespace PlaylistManager.Services
                 { "redirect_uri", "http://localhost:8888/callback" },
                 { "client_id", "8ebd57c9f29644fda8054ad400676c43" },
                 { "code_verifier", codeVerifier }
+            };
+
+            FormUrlEncodedContent body = new(values);
+
+            HttpResponseMessage response = _httpClient.PostAsync("https://accounts.spotify.com/api/token", body).Result;
+
+            if (!response.IsSuccessStatusCode) throw new Exception(response.ReasonPhrase);
+
+            Data.FromSpotify.Token? token = JsonSerializer.Deserialize<Data.FromSpotify.Token>(response.Content.ReadAsStream());
+
+            return token is not null ? new Token(token) : throw new Exception("Generic error.");
+        }
+
+        public Token RefreshToken(string refreshToken)
+        {
+            Dictionary<string, string> values = new()
+            {
+                { "grant_type", "refresh_token" },
+                { "refresh_token", refreshToken },
+                { "client_id", "8ebd57c9f29644fda8054ad400676c43" }
             };
 
             FormUrlEncodedContent body = new(values);
