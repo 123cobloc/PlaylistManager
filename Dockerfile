@@ -7,16 +7,16 @@ EXPOSE 443
 
 FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
 WORKDIR /src
-COPY ["PlaylistManager.API/PlaylistManager.API.csproj", "PlaylistManager.API/"]
-RUN dotnet restore "PlaylistManager.API/PlaylistManager.API.csproj"
+COPY ["PlaylistManager/PlaylistManager.csproj", "PlaylistManager/"]
+RUN dotnet restore "PlaylistManager/PlaylistManager.csproj"
 COPY . .
-WORKDIR "/src/PlaylistManager.API"
-RUN dotnet build "PlaylistManager.API.csproj" -c Release -o /app/build
+WORKDIR "/src/PlaylistManager"
+RUN dotnet build "PlaylistManager.csproj" -c Release -o /app/build
 
 FROM build AS publish
-RUN dotnet publish "PlaylistManager.API.csproj" -c Release -o /app/publish /p:UseAppHost=false
+RUN dotnet publish "PlaylistManager.csproj" -c Release -o /app/publish /p:UseAppHost=false
 
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "PlaylistManager.API.dll"]
+ENTRYPOINT ["dotnet", "PlaylistManager.dll"]
