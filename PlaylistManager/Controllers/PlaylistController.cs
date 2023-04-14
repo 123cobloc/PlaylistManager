@@ -9,10 +9,12 @@ namespace PlaylistManager.API.Controllers
     [ApiController]
     public class PlaylistController : ControllerBase
     {
+        private readonly IUtils _utils;
         private readonly IPlaylistService _playlistService;
 
-        public PlaylistController(PlaylistService playlistService)
+        public PlaylistController(Utils utils, PlaylistService playlistService)
         {
+            _utils = utils;
             _playlistService = playlistService;
         }
 
@@ -22,25 +24,13 @@ namespace PlaylistManager.API.Controllers
             try
             {
                 string token = HttpContext.Request.Headers["Authorization"].ToString();
-                return Ok(_playlistService.GetMyPlaylists(token));
+                List<Playlist> playlists = _playlistService.GetMyPlaylists(token);
+                if (playlists.Any(x => x.Name == "Queue")) playlists.Remove(playlists.FirstOrDefault(x => x.Name == "Queue")!);
+                return Ok(playlists);
             }
             catch (Exception ex)
             {
-                return ex.Message == "Unauthorized" ? Unauthorized() : BadRequest(ex.Message);
-            }
-        }
-
-        [HttpGet("queue")]
-        public ActionResult<Playlist> GetQueue()
-        {
-            try
-            {
-                string token = HttpContext.Request.Headers["Authorization"].ToString();
-                return Ok(_playlistService.LoadTracks(token, _playlistService.GetQueue(token) ?? throw new Exception("Playlist not found.")));
-            }
-            catch (Exception ex)
-            {
-                return ex.Message == "Unauthorized" ? Unauthorized() : BadRequest(ex.Message);
+                return _utils.ErrorManager(ex);
             }
         }
 
@@ -50,12 +40,55 @@ namespace PlaylistManager.API.Controllers
             try
             {
                 string token = HttpContext.Request.Headers["Authorization"].ToString();
-                Playlist playlist = _playlistService.GetPlaylist(token, playlistId) ?? throw new Exception("Playlist not found.");
-                return Ok(_playlistService.LoadTracks(token, playlist));
+                return Ok(_playlistService.LoadTracks(token, _playlistService.GetPlaylist(token, playlistId)));
             }
             catch (Exception ex)
             {
-                return ex.Message == "Unauthorized" ? Unauthorized() : BadRequest(ex.Message);
+                return _utils.ErrorManager(ex);
+            }
+        }
+
+        [HttpPost("{playlistId}/add/{trackId}")]
+        public ActionResult AddTrack(string playlistId, string trackId)
+        {
+            try
+            {
+                string token = HttpContext.Request.Headers["Authorization"].ToString();
+                _playlistService.AddTrack(token, playlistId, trackId);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return _utils.ErrorManager(ex);
+            }
+        }
+
+        [HttpDelete("{playlistId}/remove/{trackId}")]
+        public ActionResult RemoveTrack(string playlistId, string trackId)
+        {
+            try
+            {
+                string token = HttpContext.Request.Headers["Authorization"].ToString();
+                _playlistService.RemoveTrack(token, playlistId, trackId);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return _utils.ErrorManager(ex);
+            }
+        }
+
+        [HttpGet("{playlistId}/contains/{trackId}")]
+        public ActionResult CheckTrack(string playlistId, string trackId)
+        {
+            try
+            {
+                string token = HttpContext.Request.Headers["Authorization"].ToString();
+                return Ok(_playlistService.CheckTrack(token, playlistId, trackId));
+            }
+            catch (Exception ex)
+            {
+                return _utils.ErrorManager(ex);
             }
         }
     }

@@ -12,7 +12,9 @@ builder.Services.AddControllers();
 builder.Services.AddSwaggerGen();
 builder.Services.AddEndpointsApiExplorer();
 
+builder.Services.AddSingleton<Utils>();
 builder.Services.AddSingleton<UserService>();
+builder.Services.AddSingleton<TrackService>();
 builder.Services.AddSingleton<PlaylistService>();
 
 var app = builder.Build();

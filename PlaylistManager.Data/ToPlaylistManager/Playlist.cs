@@ -14,6 +14,8 @@ namespace PlaylistManager.Data.ToPlaylistManager
         public string? Image { get; set; }
         public string Name { get; set; }
         public bool IsMine { get; set; }
+        public bool IsCollaborative { get; set; }
+        public int TracksNumber { get; set; }
         public List<Track> Tracks { get; set; } = new();
 
         public Playlist(FromSpotify.Playlist playlist, string userId)
@@ -23,6 +25,8 @@ namespace PlaylistManager.Data.ToPlaylistManager
             Image = playlist.images.First().url;
             Name = playlist.name;
             IsMine = playlist.owner.id == userId;
+            IsCollaborative = playlist.collaborative;
+            TracksNumber = playlist.tracks.total;
         }
     }
 }

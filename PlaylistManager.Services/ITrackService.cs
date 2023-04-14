@@ -1,0 +1,9 @@
+﻿using PlaylistManager.Data.ToPlaylistManager;
+
+namespace PlaylistManager.Services
+{
+    public interface ITrackService
+    {
+        Track GetTrack(string token, string trackId);
+    }
+}
