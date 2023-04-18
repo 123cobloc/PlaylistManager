@@ -14,14 +14,17 @@ namespace PlaylistManager.Data.ToPlaylistManager
         public string Title { get; set; }
         public List<Artist> Artists { get; set; }
         public Album Album { get; set; }
+        public long? Timestamp { get; set; }
+        public bool? IsFromQueue { get; set; } = null;
 
-        public Track(FromSpotify.Track track)
+        public Track(FromSpotify.Track track, long? timestamp = null)
         {
             Url = track.external_urls.spotify ?? "";
             Id = track.id ?? "";
             Title = track.name ?? "";
             Artists = track.artists.Select(a => new Artist(a)).ToList();
             Album = new Album(track.album);
+            Timestamp = timestamp;
         }
     }
 }

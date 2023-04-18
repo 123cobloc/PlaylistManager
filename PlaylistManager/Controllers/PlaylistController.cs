@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
 using PlaylistManager.Data.ToPlaylistManager;
 using PlaylistManager.Services;
 
@@ -24,6 +25,7 @@ namespace PlaylistManager.API.Controllers
             try
             {
                 string token = HttpContext.Request.Headers["Authorization"].ToString();
+                if (token.IsNullOrEmpty()) throw new Exception("401");
                 List<Playlist> playlists = _playlistService.GetMyPlaylists(token);
                 if (playlists.Any(x => x.Name == "Queue")) playlists.Remove(playlists.FirstOrDefault(x => x.Name == "Queue")!);
                 return Ok(playlists);
@@ -40,7 +42,8 @@ namespace PlaylistManager.API.Controllers
             try
             {
                 string token = HttpContext.Request.Headers["Authorization"].ToString();
-                return Ok(_playlistService.LoadTracks(token, _playlistService.GetPlaylist(token, playlistId)));
+                if (token.IsNullOrEmpty()) throw new Exception("401");
+                return Ok(_playlistService.GetPlaylist(token, playlistId));
             }
             catch (Exception ex)
             {
@@ -54,6 +57,7 @@ namespace PlaylistManager.API.Controllers
             try
             {
                 string token = HttpContext.Request.Headers["Authorization"].ToString();
+                if (token.IsNullOrEmpty()) throw new Exception("401");
                 _playlistService.AddTrack(token, playlistId, trackId);
                 return Ok();
             }
@@ -69,6 +73,7 @@ namespace PlaylistManager.API.Controllers
             try
             {
                 string token = HttpContext.Request.Headers["Authorization"].ToString();
+                if (token.IsNullOrEmpty()) throw new Exception("401");
                 _playlistService.RemoveTrack(token, playlistId, trackId);
                 return Ok();
             }
@@ -84,7 +89,24 @@ namespace PlaylistManager.API.Controllers
             try
             {
                 string token = HttpContext.Request.Headers["Authorization"].ToString();
+                if (token.IsNullOrEmpty()) throw new Exception("401");
                 return Ok(_playlistService.CheckTrack(token, playlistId, trackId));
+            }
+            catch (Exception ex)
+            {
+                return _utils.ErrorManager(ex);
+            }
+        }
+
+        [HttpPost("CreateQueue")]
+        public ActionResult CreateQueue()
+        {
+            try
+            {
+                string token = HttpContext.Request.Headers["Authorization"].ToString();
+                if (token.IsNullOrEmpty()) throw new Exception("401");
+                _playlistService.CreateQueue(token);
+                return Ok();
             }
             catch (Exception ex)
             {

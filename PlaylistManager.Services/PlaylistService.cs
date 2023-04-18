@@ -1,11 +1,7 @@
-﻿using PlaylistManager.Data.ToPlaylistManager;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using PlaylistManager.Data;
+using PlaylistManager.Data.ToPlaylistManager;
+using System.Reflection.Metadata.Ecma335;
 using System.Text.Json;
-using System.Threading.Tasks;
-using static PlaylistManager.Services.PlaylistService;
 
 namespace PlaylistManager.Services
 {
@@ -55,14 +51,14 @@ namespace PlaylistManager.Services
         {
             HttpResponseMessage response = await _httpClient.GetAsync($"https://api.spotify.com/v1/me/playlists?limit={50}&offset={offset}");
             if (!response.IsSuccessStatusCode) throw new Exception(_utils.StatusCode(response));
-            Data.FromSpotify.PlaylistPaginator? page = JsonSerializer.Deserialize<Data.FromSpotify.PlaylistPaginator>(response.Content.ReadAsStream()) ?? throw new Exception("Generic error.");
-            playlists.AddRange(page.items.Select(x => new Playlist(x, userId)).Where(x => x.IsMine || x.IsCollaborative));
+            Data.FromSpotify.PlaylistPaginator? page = JsonSerializer.Deserialize<Data.FromSpotify.PlaylistPaginator>(response.Content.ReadAsStream()) ?? throw new Exception("500");
+            playlists.AddRange(page.items.Select(x => new Playlist(x, userId)).Where(x => (bool)x.IsMine! || x.IsCollaborative));
         }
 
         public Playlist GetPlaylist(string token, string playlistId)
         {
 
-            return GetMyPlaylists(token).FirstOrDefault(x => playlistId != "pmqueue" ? x.Id == playlistId : x.Name == "Queue" && x.IsMine && !x.IsCollaborative) ?? throw new Exception("Not found");
+            return GetMyPlaylists(token).FirstOrDefault(x => playlistId != "pmqueue" ? x.Id == playlistId : x.Name == "Queue" && (bool)x.IsMine! && !x.IsCollaborative) ?? throw new Exception("404");
         }
 
         public void AddTrack(string token, string playlistId, string trackId)
@@ -119,6 +115,16 @@ namespace PlaylistManager.Services
             return ContainsTrack.No;
         }
 
+        public void CreateQueue(string token)
+        {
+            _httpClient.DefaultRequestHeaders.Add("Authorization", token);
+            HttpRequestMessage request = new(HttpMethod.Post, $"https://api.spotify.com/v1/me/playlists");
+            request.Content = new StringContent($"{{\"name\":\"Queue - PM\",\"description\":\"Created by PlaylistManager\",\"public\":false}}");
+            HttpResponseMessage response = _httpClient.SendAsync(request).Result;
+            _httpClient.DefaultRequestHeaders.Remove("Authorization");
+            if (!response.IsSuccessStatusCode) throw new Exception(_utils.StatusCode(response));
+        }
+
         public Playlist LoadTracks(string token, Playlist playlist)
         {
 
@@ -143,6 +149,30 @@ namespace PlaylistManager.Services
             if (!response.IsSuccessStatusCode) throw new Exception(_utils.StatusCode(response));
             Data.FromSpotify.TracksPaginator? page = JsonSerializer.Deserialize<Data.FromSpotify.TracksPaginator>(response.Content.ReadAsStream()) ?? throw new Exception("Generic error.");
             playlist.Tracks.AddRange(page.items.Select(x => new Track(x.track)).Where(x => x.Id is not ""));
+        }
+
+        public List<Playlist> GetPlaylists(string token, List<Tuple<string, long>> ids)
+        {
+            List<Playlist> playlists = new();
+            if (ids.Count == 0) return playlists;
+            int offset = 0;
+            List<Task> tasks = new();
+            _httpClient.DefaultRequestHeaders.Add("Authorization", token);
+            do
+            {
+                tasks.Add(GetPlaylistsPage(ids.GetRange(offset, offset + 1 > ids.Count - offset ? ids.Count - offset : offset + 1), playlists));
+            } while ((offset += 1) < ids.Count);
+            _httpClient.DefaultRequestHeaders.Remove("Authorization");
+            Task.WaitAll(tasks.ToArray());
+            return playlists;
+        }
+
+        private async Task GetPlaylistsPage(List<Tuple<string, long>> ids, List<Playlist> playlists)
+        {
+            HttpResponseMessage response = await _httpClient.GetAsync($"https://api.spotify.com/v1/playlists/{string.Join(',', ids.Select(x => x.Item1))}");
+            if (!response.IsSuccessStatusCode) throw new Exception(_utils.StatusCode(response));
+            Data.FromSpotify.Playlist _playlists = JsonSerializer.Deserialize<Data.FromSpotify.Playlist>(response.Content.ReadAsStream()) ?? throw new Exception("500");
+            playlists.Add(new Playlist(_playlists, null, ids.FirstOrDefault(x => x.Item1 == _playlists.id)?.Item2));
         }
     }
 }

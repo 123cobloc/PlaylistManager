@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore.Storage.ValueConversion.Internal;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,9 +13,9 @@ namespace PlaylistManager.Data.FromSpotify
         public string href { get; set; }
         public List<Playlist> items { get; set; }
         public int limit { get; set; }
-        public string next { get; set; }
+        public string? next { get; set; }
         public int offset { get; set; }
-        public object previous { get; set; }
+        public string? previous { get; set; }
         public int total { get; set; }
     }
 
@@ -31,7 +32,7 @@ namespace PlaylistManager.Data.FromSpotify
         public object primary_color { get; set; }
         public bool _public { get; set; }
         public string snapshot_id { get; set; }
-        public Tracks tracks { get; set; }
+        public PlaylistTracks tracks { get; set; }
         public string type { get; set; }
         public string uri { get; set; }
     }
@@ -46,10 +47,26 @@ namespace PlaylistManager.Data.FromSpotify
         public string uri { get; set; }
     }
 
-    public class Tracks
+    public class PlaylistTracks
     {
         public string href { get; set; }
         public int total { get; set; }
     }
 
+
+    public class PlaylistsSearch
+    {
+        public Playlists playlists { get; set; }
+    }
+
+    public class Playlists
+    {
+        public string href { get; set; }
+        public List<Playlist> items { get; set; }
+        public int limit { get; set; }
+        public string? next { get; set; }
+        public int offset { get; set; }
+        public string? previous { get; set; }
+        public int total { get; set; }
+    }
 }
