@@ -1,12 +1,6 @@
 ﻿using PlaylistManager.Data;
 using PlaylistManager.Data.ToPlaylistManager;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Http;
-using System.Text;
 using System.Text.Json;
-using System.Threading.Tasks;
 
 namespace PlaylistManager.Services
 {
@@ -14,16 +8,15 @@ namespace PlaylistManager.Services
     {
 
         private readonly IUtils _utils;
-        private readonly PlaylistManagerDb _db;
         private readonly HttpClient _httpClient;
         private readonly IUserService _userService;
         private readonly ITrackService _trackService;
         private readonly IAlbumService _albumService;
         private readonly IArtistService _artistService;
         private readonly IPlaylistService _playlistService;
-        public WatchlistService(PlaylistManagerDb db, Utils utils, UserService userService, TrackService trackService, AlbumService albumService, ArtistService artistService, PlaylistService playlistService)
+        private readonly PlaylistManagerCosmos _cosmos;
+        public WatchlistService(Utils utils, UserService userService, TrackService trackService, AlbumService albumService, ArtistService artistService, PlaylistService playlistService, PlaylistManagerCosmos cosmos)
         {
-            _db = db;
             _utils = utils;
             _httpClient = new();
             _userService = userService;
@@ -31,22 +24,23 @@ namespace PlaylistManager.Services
             _albumService = albumService;
             _artistService = artistService;
             _playlistService = playlistService;
+            _cosmos = cosmos;
         }
 
         public void AddToWatchlist(string token, string playlistId, ItemType itemType)
         {
             string userId = _userService.GetMe(token).Id;
-            if (_db.Watchlist.Any(x => x.UserId == userId && x.ItemId == playlistId && x.ItemType == itemType)) throw new Exception("409");
-            _db.Watchlist.Add(new Watchlist(userId, playlistId, itemType));
-            if (_db.SaveChanges() == 0) throw new Exception("Generic error.");
+            if (_cosmos.Watchlist.Where(x => x.UserId == userId && x.ItemId == playlistId && x.ItemType == itemType).FirstOrDefault() is not null) throw new Exception("409");
+            _cosmos.Add(new Watchlist(userId, playlistId, itemType));
+            if (_cosmos.SaveChanges() == 0) throw new Exception("Generic error.");
         }
 
         public void RemoveFromWatchlist(string token, string playlistId, ItemType itemType)
         {
             string userId = _userService.GetMe(token).Id;
-            Watchlist item = _db.Watchlist.FirstOrDefault(x => x.UserId == userId && x.ItemId == playlistId && x.ItemType == itemType) ?? throw new Exception("404");
-            _db.Watchlist.Remove(item);
-            if (_db.SaveChanges() == 0) throw new Exception("Generic error.");
+            Watchlist item = _cosmos.Watchlist.FirstOrDefault(x => x.UserId == userId && x.ItemId == playlistId && x.ItemType == itemType) ?? throw new Exception("404");
+            _cosmos.Watchlist.Remove(item);
+            if (_cosmos.SaveChanges() == 0) throw new Exception("Generic error.");
         }
 
         public List<object> SearchFor(string token, ItemType itemType, string query)
@@ -87,7 +81,7 @@ namespace PlaylistManager.Services
         public List<object> GetWatchlist(string token, ItemType itemType)
         {
             string userId = _userService.GetMe(token).Id;
-            List<Watchlist> watchlist = _db.Watchlist.Where(x => x.UserId == userId && x.ItemType == itemType).ToList();
+            List<Watchlist> watchlist = _cosmos.Watchlist.Where(x => x.UserId == userId && x.ItemType == itemType).ToList();
             List<object> result = new();
             switch (itemType)
             {

@@ -1,11 +1,4 @@
-﻿using PlaylistManager.Data.FromSpotify;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace PlaylistManager.Data.ToPlaylistManager
+﻿namespace PlaylistManager.Data.ToPlaylistManager
 {
     public class Artist
     {

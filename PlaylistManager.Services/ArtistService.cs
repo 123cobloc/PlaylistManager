@@ -1,11 +1,5 @@
-﻿using Microsoft.Identity.Client;
-using PlaylistManager.Data.ToPlaylistManager;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using PlaylistManager.Data.ToPlaylistManager;
 using System.Text.Json;
-using System.Threading.Tasks;
 
 namespace PlaylistManager.Services
 {
@@ -40,7 +34,7 @@ namespace PlaylistManager.Services
             HttpResponseMessage response = await _httpClient.GetAsync($"https://api.spotify.com/v1/artists?ids={string.Join(',', ids.Select(x => x.Item1))}");
             if (!response.IsSuccessStatusCode) throw new Exception(_utils.StatusCode(response));
             Data.FromSpotify.GetArtists _artists = JsonSerializer.Deserialize<Data.FromSpotify.GetArtists>(response.Content.ReadAsStream()) ?? throw new Exception("500");
-            artists.AddRange(_artists.artists.Select(x => new Artist(x, ids.FirstOrDefault(y => y.Item1 == x.id)?.Item2)));
+            artists.AddRange(_artists.artists.Where(x => x is not null).Select(x => new Artist(x, ids.FirstOrDefault(y => y.Item1 == x.id)?.Item2)));
         }
     }
 }

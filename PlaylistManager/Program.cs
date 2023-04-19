@@ -1,7 +1,4 @@
-using AspNet.Security.OAuth.Spotify;
-using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.OpenApi.Models;
 using PlaylistManager.Data;
 using PlaylistManager.Services;
 using System.Text.Json.Serialization;
@@ -19,8 +16,12 @@ builder.Services.AddControllers()
 builder.Services.AddSwaggerGen();
 builder.Services.AddEndpointsApiExplorer();
 
-builder.Services.AddDbContext<PlaylistManagerDb>(options =>
-    options.UseSqlServer("Server=tcp:playlistmanager.database.windows.net,1433;Initial Catalog=playlistmanager;Persist Security Info=False;User ID=pmadmin;Password=c9AC$3q*@C5B%l&KEMw&Z9%@Pe6S2F0m;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;"));
+builder.Services.AddDbContext<PlaylistManagerCosmos>(options =>
+    options.UseCosmos(
+        connectionString: "AccountEndpoint=https://playlistmanager.documents.azure.com:443/;AccountKey=4ER3KwKDoedgYqHHOgKnVwdNhFu8f8MeU2ZKDy7YYrCr3Y5cP7DExfn2JTf7OITfOJQPZzBdoqBdACDbFIalqQ==;",
+        databaseName: "PlaylistManager"
+    ));
+
 
 builder.Services.AddSingleton<Utils>();
 builder.Services.AddSingleton<UserService>();
@@ -33,7 +34,6 @@ builder.Services.AddScoped<WatchlistService>();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -42,8 +42,8 @@ if (app.Environment.IsDevelopment())
 
 using (var scope = app.Services.CreateScope())
 {
-    var db = scope.ServiceProvider.GetRequiredService<PlaylistManagerDb>();
-    db.Database.Migrate();
+    var cosmos = scope.ServiceProvider.GetRequiredService<PlaylistManagerCosmos>();
+    cosmos.Database.EnsureCreated(); 
 }
 
 app.UseHttpsRedirection();

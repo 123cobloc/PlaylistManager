@@ -51,7 +51,7 @@ namespace PlaylistManager.Services
             HttpResponseMessage response = await _httpClient.GetAsync($"https://api.spotify.com/v1/tracks?ids={string.Join(',', ids.Select(x => x.Item1))}");
             if (!response.IsSuccessStatusCode) throw new Exception(_utils.StatusCode(response));
             Data.FromSpotify.GetTracks _tracks = JsonSerializer.Deserialize<Data.FromSpotify.GetTracks>(response.Content.ReadAsStream()) ?? throw new Exception("500");
-            tracks.AddRange(_tracks.tracks.Select(x => new Track(x, ids.FirstOrDefault(y => y.Item1 == x.id)?.Item2)));
+            tracks.AddRange(_tracks.tracks.Where(x => x is not null).Select(x => new Track(x, ids.FirstOrDefault(y => y.Item1 == x.id)?.Item2)));
         }
     }
 }

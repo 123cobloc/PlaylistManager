@@ -1,12 +1,4 @@
-﻿using Microsoft.IdentityModel.Tokens;
-using PlaylistManager.Data.FromSpotify;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace PlaylistManager.Data.ToPlaylistManager
+﻿namespace PlaylistManager.Data.ToPlaylistManager
 {
     public class Playlist
     {
@@ -27,7 +19,7 @@ namespace PlaylistManager.Data.ToPlaylistManager
             Id = playlist.id;
             Image = playlist.images.FirstOrDefault()?.url;
             Name = playlist.name;
-            Description = playlist.description.IsNullOrEmpty() ? null : playlist.description;
+            Description = string.IsNullOrEmpty(playlist.description) ? null : playlist.description;
             IsMine = userId is null ? null : playlist.owner.id == userId;
             IsCollaborative = playlist.collaborative;
             TracksNumber = playlist.tracks.total;

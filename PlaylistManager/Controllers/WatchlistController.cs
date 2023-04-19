@@ -1,11 +1,6 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.IdentityModel.Tokens;
-using PlaylistManager.Data.FromSpotify;
+﻿using Microsoft.AspNetCore.Mvc;
 using PlaylistManager.Data.ToPlaylistManager;
 using PlaylistManager.Services;
-using System.Collections.Generic;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace PlaylistManager.Controllers
 {
@@ -58,7 +53,7 @@ namespace PlaylistManager.Controllers
             try
             {
                 string token = HttpContext.Request.Headers["Authorization"].ToString();
-                if (token.IsNullOrEmpty()) throw new Exception("401");
+                if (string.IsNullOrEmpty(token)) throw new Exception("401");
                 return Ok(_watchlistService.SearchFor(token, itemType, query));
             }
             catch (Exception ex)
@@ -73,7 +68,7 @@ namespace PlaylistManager.Controllers
             try
             {
                 string token = HttpContext.Request.Headers["Authorization"].ToString();
-                if (token.IsNullOrEmpty()) throw new Exception("401");
+                if (string.IsNullOrEmpty(token)) throw new Exception("401");
                 return Ok(_watchlistService.GetWatchlist(token, itemType));
             }
             catch (Exception ex)

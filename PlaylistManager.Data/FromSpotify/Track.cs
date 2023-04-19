@@ -1,11 +1,4 @@
-﻿using PlaylistManager.Data.ToPlaylistManager;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace PlaylistManager.Data.FromSpotify
+﻿namespace PlaylistManager.Data.FromSpotify
 {
     public class TracksPaginator
     {

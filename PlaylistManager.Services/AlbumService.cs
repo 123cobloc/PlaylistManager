@@ -39,7 +39,7 @@ namespace PlaylistManager.Services
             HttpResponseMessage response = await _httpClient.GetAsync($"https://api.spotify.com/v1/albums?ids={string.Join(",", ids.Select(x => x.Item1))}");
             if (!response.IsSuccessStatusCode) throw new Exception(_utils.StatusCode(response));
             Data.FromSpotify.GetAlbums _albums = JsonSerializer.Deserialize<Data.FromSpotify.GetAlbums>(response.Content.ReadAsStream()) ?? throw new Exception("500");
-            albums.AddRange(_albums.albums.Select(x => new Album(x, ids.FirstOrDefault(y => y.Item1 == x.id)?.Item2)));
+            albums.AddRange(_albums.albums.Where(x => x is not null).Select(x => new Album(x, ids.FirstOrDefault(y => y.Item1 == x.id)?.Item2)));
         }
     }
 }

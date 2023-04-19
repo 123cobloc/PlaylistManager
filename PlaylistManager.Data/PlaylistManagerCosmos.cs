@@ -8,18 +8,18 @@ using System.Threading.Tasks;
 
 namespace PlaylistManager.Data
 {
-    public class PlaylistManagerDb : DbContext
+    public class PlaylistManagerCosmos : DbContext
     {
-        public PlaylistManagerDb(DbContextOptions<PlaylistManagerDb> options) : base(options) { }
+        public PlaylistManagerCosmos(DbContextOptions<PlaylistManagerCosmos> options) : base(options) { }
 
         public DbSet<Watchlist> Watchlist { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Watchlist>()
+                .ToContainer("Watchlist")
+                .HasPartitionKey(w => w.UserId)
                 .HasKey(w => new { w.UserId, w.ItemId, w.ItemType });
         }
     }
-
-
 }

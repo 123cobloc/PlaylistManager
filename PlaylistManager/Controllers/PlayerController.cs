@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Identity.Client;
+﻿using Microsoft.AspNetCore.Mvc;
 using PlaylistManager.Data.ToPlaylistManager;
 using PlaylistManager.Services;
 

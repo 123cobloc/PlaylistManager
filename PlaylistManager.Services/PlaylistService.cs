@@ -1,5 +1,7 @@
-﻿using PlaylistManager.Data;
+﻿using Microsoft.AspNetCore.Http;
+using PlaylistManager.Data;
 using PlaylistManager.Data.ToPlaylistManager;
+using System.Net;
 using System.Reflection.Metadata.Ecma335;
 using System.Text.Json;
 
@@ -170,6 +172,7 @@ namespace PlaylistManager.Services
         private async Task GetPlaylistsPage(List<Tuple<string, long>> ids, List<Playlist> playlists)
         {
             HttpResponseMessage response = await _httpClient.GetAsync($"https://api.spotify.com/v1/playlists/{string.Join(',', ids.Select(x => x.Item1))}");
+            if (response.StatusCode == HttpStatusCode.NotFound) return;
             if (!response.IsSuccessStatusCode) throw new Exception(_utils.StatusCode(response));
             Data.FromSpotify.Playlist _playlists = JsonSerializer.Deserialize<Data.FromSpotify.Playlist>(response.Content.ReadAsStream()) ?? throw new Exception("500");
             playlists.Add(new Playlist(_playlists, null, ids.FirstOrDefault(x => x.Item1 == _playlists.id)?.Item2));

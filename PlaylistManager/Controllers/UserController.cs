@@ -1,7 +1,4 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.IdentityModel.Tokens;
+﻿using Microsoft.AspNetCore.Mvc;
 using PlaylistManager.Data.ToPlaylistManager;
 using PlaylistManager.Services;
 
@@ -55,7 +52,7 @@ namespace PlaylistManager.Controllers
             try
             {
                 string token = HttpContext.Request.Headers["Authorization"].ToString();
-                if (token.IsNullOrEmpty()) throw new Exception("401");
+                if (string.IsNullOrEmpty(token)) throw new Exception("401");
                 return Ok(_userService.GetMe(token));
             }
             catch (Exception ex)
