@@ -1,19 +1,14 @@
 ﻿using PlaylistManager.Data.ToPlaylistManager;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
-using System.Threading.Tasks;
-using static System.Net.WebRequestMethods;
 
 namespace PlaylistManager.Services
 {
     public class UserService : IUserService
     {
-        IUtils _utils;
-        HttpClient _httpClient;
+        private readonly IUtils _utils;
+        private readonly HttpClient _httpClient;
         public UserService(Utils utils)
         { 
             _utils = utils;
