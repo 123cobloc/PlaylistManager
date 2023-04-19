@@ -46,6 +46,11 @@ using (var scope = app.Services.CreateScope())
     cosmos.Database.EnsureCreated(); 
 }
 
+app.UseCors(policy =>
+{
+    policy.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader();
+});
+
 app.UseHttpsRedirection();
 
 app.MapControllers();
