@@ -15,7 +15,7 @@ namespace PlaylistManager.Controllers
         }
 
         [HttpGet("loginUrl")]
-        public ActionResult<string> GetLoginUrl(string codeVerifier)
+        public ActionResult<Login> GetLoginUrl(string codeVerifier)
         {
             return codeVerifier.Length == 128 ? Ok(_userService.GenerateLoginUrl(codeVerifier)) : BadRequest("Invalid codeVerifier");
         }

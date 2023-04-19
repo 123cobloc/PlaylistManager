@@ -15,7 +15,7 @@ namespace PlaylistManager.Services
             _httpClient = new HttpClient();
         }
 
-        public string GenerateLoginUrl(string codeVerifier)
+        public Login GenerateLoginUrl(string codeVerifier)
         {
             string baseUrl = "https://accounts.spotify.com/authorize";
             string responseType = "code";
@@ -26,7 +26,7 @@ namespace PlaylistManager.Services
             string codeChallengeMethod = "S256";
             string codeChallenge = GenerateCodeChallenge(codeVerifier);
 
-            return baseUrl + $"?response_type={responseType}&client_id={clientId}&scope={scope}&redirect_uri={redirectUri}&state={state}&code_challenge_method={codeChallengeMethod}&code_challenge={codeChallenge}";
+            return new Login(baseUrl + $"?response_type={responseType}&client_id={clientId}&scope={scope}&redirect_uri={redirectUri}&state={state}&code_challenge_method={codeChallengeMethod}&code_challenge={codeChallenge}", state);
         }
         
         public Token GetToken(string authorizationCode, string codeVerifier)
