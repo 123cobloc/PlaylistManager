@@ -35,7 +35,7 @@ namespace PlaylistManager.Services
             {
                 { "grant_type", "authorization_code" },
                 { "code", authorizationCode },
-                { "redirect_uri", "http://localhost:8888/callback" },
+                { "redirect_uri", "http://localhost:4200/callback" },
                 { "client_id", "8ebd57c9f29644fda8054ad400676c43" },
                 { "code_verifier", codeVerifier }
             };
