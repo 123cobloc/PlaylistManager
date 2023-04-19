@@ -21,7 +21,7 @@ namespace PlaylistManager.Services
             string responseType = "code";
             string clientId = "8ebd57c9f29644fda8054ad400676c43";
             string scope = "user-read-private user-read-email playlist-read-private playlist-modify-public playlist-modify-private user-read-playback-state user-modify-playback-state";
-            string redirectUri = "http://localhost:8888/callback";
+            string redirectUri = "http://localhost:4200/callback";
             string state = GenerateRandomString(16);
             string codeChallengeMethod = "S256";
             string codeChallenge = GenerateCodeChallenge(codeVerifier);
