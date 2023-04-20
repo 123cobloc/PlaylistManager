@@ -24,7 +24,7 @@ namespace PlaylistManager.Controllers
         [HttpGet("test")]
         public ActionResult<object> Test()
         {
-            string returnUrl = HttpContext.Request.HasFormContentType ? HttpContext.Request.Form["returnurl"].ToString() : "http://test" ;
+            string returnUrl = HttpContext.Request.Headers["Referer"].ToString() /*? HttpContext.Request.Form["returnurl"].ToString() : "http://test" */;
             return Ok(new { test = $"{returnUrl}/callback" });
         }
 
