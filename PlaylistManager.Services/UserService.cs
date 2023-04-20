@@ -15,13 +15,12 @@ namespace PlaylistManager.Services
             _httpClient = new HttpClient();
         }
 
-        public Login GenerateLoginUrl(string codeVerifier)
+        public Login GenerateLoginUrl(string codeVerifier, string redirectUri)
         {
             string baseUrl = "https://accounts.spotify.com/authorize";
             string responseType = "code";
             string clientId = "8ebd57c9f29644fda8054ad400676c43";
             string scope = "user-read-private user-read-email playlist-read-private playlist-modify-public playlist-modify-private user-read-playback-state user-modify-playback-state";
-            string redirectUri = "http://localhost:4200/callback";
             string state = GenerateRandomString(16);
             string codeChallengeMethod = "S256";
             string codeChallenge = GenerateCodeChallenge(codeVerifier);
@@ -29,13 +28,13 @@ namespace PlaylistManager.Services
             return new Login(baseUrl + $"?response_type={responseType}&client_id={clientId}&scope={scope}&redirect_uri={redirectUri}&state={state}&code_challenge_method={codeChallengeMethod}&code_challenge={codeChallenge}", state);
         }
         
-        public Token GetToken(string authorizationCode, string codeVerifier)
+        public Token GetToken(string authorizationCode, string codeVerifier, string redirectUri)
         {
             Dictionary<string, string> values = new()
             {
                 { "grant_type", "authorization_code" },
                 { "code", authorizationCode },
-                { "redirect_uri", "http://localhost:4200/callback" },
+                { "redirect_uri", redirectUri },
                 { "client_id", "8ebd57c9f29644fda8054ad400676c43" },
                 { "code_verifier", codeVerifier }
             };
