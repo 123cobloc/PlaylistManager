@@ -31,7 +31,7 @@ namespace PlaylistManager.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return _utils.ErrorManager(ex);
             }
         }
 
@@ -44,7 +44,7 @@ namespace PlaylistManager.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return _utils.ErrorManager(ex);
             }
         }
 
@@ -59,7 +59,7 @@ namespace PlaylistManager.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return _utils.ErrorManager(ex);
             }
         }
     }
