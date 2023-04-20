@@ -8,24 +8,18 @@ namespace PlaylistManager.Controllers
     [ApiController]
     public class UserController : ControllerBase
     {
+        private readonly IUtils _utils;
         private readonly IUserService _userService;
-        public UserController(UserService userService)
+        public UserController(Utils utils, UserService userService)
         { 
+            _utils = utils;
             _userService = userService;
         }
 
         [HttpGet("loginUrl")]
         public ActionResult<Login> GetLoginUrl(string codeVerifier)
         {
-            string url = $"{HttpContext.Request.Scheme}://{HttpContext.Request.Host}/callback";
-            return codeVerifier.Length == 128 ? Ok(_userService.GenerateLoginUrl(codeVerifier, url)) : BadRequest("Invalid codeVerifier");
-        }
-
-        [HttpGet("test")]
-        public ActionResult<object> Test()
-        {
-            string? returnUrl = HttpContext.Request.Headers["X-Forwarded-For"] /*? HttpContext.Request.Form["returnurl"].ToString() : "http://test" */;
-            return Ok(new { test = $"{returnUrl}/callback" });
+            return codeVerifier.Length == 128 ? Ok(_userService.GenerateLoginUrl(codeVerifier, _utils.GetReturnUrl(HttpContext.Request.Headers))) : BadRequest("Invalid codeVerifier");
         }
 
         [HttpGet("token")]
@@ -33,8 +27,7 @@ namespace PlaylistManager.Controllers
         {
             try
             {
-                string url = $"{HttpContext.Request.Scheme}://{HttpContext.Request.Host}/callback";
-                return Ok(_userService.GetToken(authorizationCode, codeVerifier, url));
+                return Ok(_userService.GetToken(authorizationCode, codeVerifier, _utils.GetReturnUrl(HttpContext.Request.Headers)));
             }
             catch (Exception ex)
             {

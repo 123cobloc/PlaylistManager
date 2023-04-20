@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 
 namespace PlaylistManager.Services
 {
@@ -6,5 +7,6 @@ namespace PlaylistManager.Services
     {
         ActionResult ErrorManager(Exception ex);
         string StatusCode(HttpResponseMessage response);
+        public string GetReturnUrl(IHeaderDictionary headers);
     }
 }

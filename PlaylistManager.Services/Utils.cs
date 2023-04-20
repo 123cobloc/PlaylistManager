@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 
 namespace PlaylistManager.Services
 {
@@ -12,6 +13,12 @@ namespace PlaylistManager.Services
         public string StatusCode(HttpResponseMessage response)
         {
             return ((int)response.StatusCode).ToString();
+        }
+
+        public string GetReturnUrl(IHeaderDictionary headers)
+        {
+            string returnUrl = headers["Origin"].ToString();
+            return $"{(string.IsNullOrEmpty(returnUrl) ? "http://test" : returnUrl)}/callback";
         }
     }
 }
