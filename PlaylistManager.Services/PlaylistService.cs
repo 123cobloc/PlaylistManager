@@ -56,7 +56,7 @@ namespace PlaylistManager.Services
         public Playlist GetPlaylist(string token, string playlistId)
         {
 
-            return GetMyPlaylists(token).FirstOrDefault(x => playlistId != "pmqueue" ? x.Id == playlistId : x.Name == "Queue" && (bool)x.IsMine! && !x.IsCollaborative) ?? throw new Exception("404");
+            return GetMyPlaylists(token).FirstOrDefault(x => playlistId != "pmqueue" ? x.Id == playlistId : x.Name == "Queue - PM" && (bool)x.IsMine! && !x.IsCollaborative) ?? throw new Exception("404");
         }
 
         public void AddTrack(string token, string playlistId, string trackId)
@@ -117,7 +117,7 @@ namespace PlaylistManager.Services
         {
             _httpClient.DefaultRequestHeaders.Add("Authorization", token);
             HttpRequestMessage request = new(HttpMethod.Post, $"https://api.spotify.com/v1/me/playlists");
-            request.Content = new StringContent($"{{\"name\":\"Queue - PM\",\"description\":\"Created by PlaylistManager\",\"public\":false}}");
+            request.Content = new StringContent($"{{\"name\":\"Queue - PM\",\"public\":false}}"/*\"description\":\"Created by PlaylistManager\",*/);
             HttpResponseMessage response = _httpClient.SendAsync(request).Result;
             _httpClient.DefaultRequestHeaders.Remove("Authorization");
             if (!response.IsSuccessStatusCode) throw new Exception(_utils.StatusCode(response));
