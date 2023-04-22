@@ -4,7 +4,7 @@
     {
         public string Url { get; set; }
         public string Id { get; set; }
-        public string Title { get; set; }
+        public string Name { get; set; }
         public List<Artist> Artists { get; set; }
         public Album Album { get; set; }
         public long? Timestamp { get; set; }
@@ -14,7 +14,7 @@
         {
             Url = track.external_urls.spotify ?? "";
             Id = track.id ?? "";
-            Title = track.name ?? "";
+            Name = track.name ?? "";
             Artists = track.artists.Select(a => new Artist(a)).ToList();
             Album = new Album(track.album);
             Timestamp = timestamp;

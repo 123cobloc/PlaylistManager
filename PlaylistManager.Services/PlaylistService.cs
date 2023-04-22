@@ -109,7 +109,7 @@ namespace PlaylistManager.Services
             if (!response.IsSuccessStatusCode) throw new Exception(_utils.StatusCode(response));
             Data.FromSpotify.TracksPaginator? page = JsonSerializer.Deserialize<Data.FromSpotify.TracksPaginator>(response.Content.ReadAsStream()) ?? throw new Exception("Generic error.");
             if (page.items.Any(x => x.track.id == track.Id)) return ContainsTrack.Yes;
-            if (page.items.Any(x => x.track.name.ToLower() == track.Title.ToLower() && x.track.artists.Any(y => track.Artists.Any(z => z.Name.ToLower() == y.name.ToLower())))) return ContainsTrack.Maybe;
+            if (page.items.Any(x => x.track.name.ToLower() == track.Name.ToLower() && x.track.artists.Any(y => track.Artists.Any(z => z.Name.ToLower() == y.name.ToLower())))) return ContainsTrack.Maybe;
             return ContainsTrack.No;
         }
 
