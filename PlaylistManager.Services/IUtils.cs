@@ -7,6 +7,7 @@ namespace PlaylistManager.Services
     {
         ActionResult ErrorManager(Exception ex);
         string StatusCode(HttpResponseMessage response);
-        public string GetReturnUrl(IHeaderDictionary headers);
+        string GetReturnUrl(IHeaderDictionary headers);
+        HttpClient HttpClient(string? token = null);
     }
 }

@@ -7,20 +7,17 @@ namespace PlaylistManager.Services
     public class PlayerService : IPlayerService
     {
         private readonly IUtils _utils;
-        private readonly HttpClient _httpClient;
         private readonly IPlaylistService _playlistService;
         public PlayerService(Utils utils, PlaylistService playlistService)
         {
             _utils = utils;
-            _httpClient = new();
             _playlistService = playlistService;
         }
 
         public Track GetCurrentTrack(string token)
         {
-            _httpClient.DefaultRequestHeaders.Add("Authorization", token);
-            HttpResponseMessage response = _httpClient.GetAsync($"https://api.spotify.com/v1/me/player").Result;
-            _httpClient.DefaultRequestHeaders.Remove("Authorization");
+            HttpClient httpClient = _utils.HttpClient(token);
+            HttpResponseMessage response = httpClient.GetAsync($"https://api.spotify.com/v1/me/player").Result;
             if (!response.IsSuccessStatusCode) throw new Exception(_utils.StatusCode(response));
             if (response.Content.Headers.ContentLength == 0) throw new Exception("204");
             Data.FromSpotify.Player? player = JsonSerializer.Deserialize<Data.FromSpotify.Player>(response.Content.ReadAsStream());

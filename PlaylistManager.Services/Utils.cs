@@ -20,5 +20,12 @@ namespace PlaylistManager.Services
             string returnUrl = headers["Origin"].ToString();
             return $"{(string.IsNullOrEmpty(returnUrl) ? "http://test" : returnUrl)}/callback";
         }
+
+        public HttpClient HttpClient(string? token = null)
+        {
+            HttpClient httpClient = new();
+            if (token is not null) httpClient.DefaultRequestHeaders.Add("Authorization", token);
+            return httpClient;
+        }
     }
 }

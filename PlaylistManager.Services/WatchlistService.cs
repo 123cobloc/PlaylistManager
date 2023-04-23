@@ -8,7 +8,6 @@ namespace PlaylistManager.Services
     {
 
         private readonly IUtils _utils;
-        private readonly HttpClient _httpClient;
         private readonly IUserService _userService;
         private readonly ITrackService _trackService;
         private readonly IAlbumService _albumService;
@@ -18,7 +17,6 @@ namespace PlaylistManager.Services
         public WatchlistService(Utils utils, UserService userService, TrackService trackService, AlbumService albumService, ArtistService artistService, PlaylistService playlistService, PlaylistManagerCosmos cosmos)
         {
             _utils = utils;
-            _httpClient = new();
             _userService = userService;
             _trackService = trackService;
             _albumService = albumService;
@@ -54,9 +52,8 @@ namespace PlaylistManager.Services
                 _ => throw new Exception("400"),
             };
 
-            _httpClient.DefaultRequestHeaders.Add("Authorization", token);
-            HttpResponseMessage response = _httpClient.GetAsync($"https://api.spotify.com/v1/search?query={query.Replace(' ', '+')}&type={_itemType}&limit={50}").Result;
-            _httpClient.DefaultRequestHeaders.Remove("Authorization");
+            HttpClient httpClient = _utils.HttpClient(token);
+            HttpResponseMessage response = httpClient.GetAsync($"https://api.spotify.com/v1/search?query={query.Replace(' ', '+')}&type={_itemType}&limit={50}").Result;
             if (!response.IsSuccessStatusCode) throw new Exception(_utils.StatusCode(response));
 
             switch (itemType)

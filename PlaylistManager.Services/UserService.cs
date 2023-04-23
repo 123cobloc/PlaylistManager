@@ -8,11 +8,9 @@ namespace PlaylistManager.Services
     public class UserService : IUserService
     {
         private readonly IUtils _utils;
-        private readonly HttpClient _httpClient;
         public UserService(Utils utils)
         { 
             _utils = utils;
-            _httpClient = new HttpClient();
         }
 
         public Login GenerateLoginUrl(string codeVerifier, string redirectUri)
@@ -41,7 +39,8 @@ namespace PlaylistManager.Services
 
             FormUrlEncodedContent body = new(values);
 
-            HttpResponseMessage response = _httpClient.PostAsync("https://accounts.spotify.com/api/token", body).Result;
+            HttpClient httpClient = _utils.HttpClient();
+            HttpResponseMessage response = httpClient.PostAsync("https://accounts.spotify.com/api/token", body).Result;
 
             if (!response.IsSuccessStatusCode) throw new Exception(_utils.StatusCode(response));
 
@@ -61,7 +60,8 @@ namespace PlaylistManager.Services
 
             FormUrlEncodedContent body = new(values);
 
-            HttpResponseMessage response = _httpClient.PostAsync("https://accounts.spotify.com/api/token", body).Result;
+            HttpClient httpClient = _utils.HttpClient();
+            HttpResponseMessage response = httpClient.PostAsync("https://accounts.spotify.com/api/token", body).Result;
 
             if (!response.IsSuccessStatusCode) throw new Exception(_utils.StatusCode(response));
 
@@ -72,9 +72,8 @@ namespace PlaylistManager.Services
 
         public User GetMe(string token)
         {
-            _httpClient.DefaultRequestHeaders.Add("Authorization", token);
-            HttpResponseMessage response = _httpClient.GetAsync("https://api.spotify.com/v1/me").Result;
-            _httpClient.DefaultRequestHeaders.Remove("Authorization");
+            HttpClient httpClient = _utils.HttpClient(token);
+            HttpResponseMessage response = httpClient.GetAsync("https://api.spotify.com/v1/me").Result;
             if (!response.IsSuccessStatusCode) throw new Exception(_utils.StatusCode(response));
             Data.FromSpotify.User? user = JsonSerializer.Deserialize<Data.FromSpotify.User>(response.Content.ReadAsStream());
             return user is not null ? new User(user) : throw new Exception("Generic error.");
