@@ -25,7 +25,7 @@ namespace PlaylistManager.API.Controllers
                 string token = HttpContext.Request.Headers["Authorization"].ToString();
                 if (string.IsNullOrEmpty(token)) throw new Exception("401");
                 List<Playlist> playlists = _playlistService.GetMyPlaylists(token);
-                if (playlists.Any(x => x.Name == "Queue")) playlists.Remove(playlists.FirstOrDefault(x => x.Name == "Queue")!);
+                if (playlists.Any(x => x.Name == "Queue - PM")) playlists.Remove(playlists.FirstOrDefault(x => x.Name == "Queue - PM")!);
                 return Ok(playlists);
             }
             catch (Exception ex)
