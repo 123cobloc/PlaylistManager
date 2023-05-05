@@ -107,6 +107,7 @@ namespace PlaylistManager.Services
 
         public void CreateQueue(string token)
         {
+            if (GetMyPlaylists(token).Any(x => x.Name == "Queue - PM" && (bool)x.IsMine! && !x.IsCollaborative)) return;
             HttpClient httpClient = _utils.HttpClient(token);
             HttpRequestMessage request = new(HttpMethod.Post, $"https://api.spotify.com/v1/me/playlists");
             request.Content = new StringContent($"{{\"name\":\"Queue - PM\",\"public\":false}}"/*\"description\":\"Created by PlaylistManager\",*/);
