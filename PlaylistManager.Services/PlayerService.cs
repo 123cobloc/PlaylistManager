@@ -22,7 +22,7 @@ namespace PlaylistManager.Services
             if (response.Content.Headers.ContentLength == 0) throw new Exception("204");
             Data.FromSpotify.Player? player = JsonSerializer.Deserialize<Data.FromSpotify.Player>(response.Content.ReadAsStream());
             Track track = player?.item is not null ? new Track(player.item) : throw new Exception(player is null ? "500" : "204");
-            if (player?.context?.type == "playlist") track.IsFromQueue = player.context.uri == $"spotify:playlist:{_playlistService.GetPlaylist(token, "pmqueue").Id}";
+            track.IsFromQueue = _playlistService.CheckTrack(token, "pmqueue", track.Id) == PlaylistService.ContainsTrack.Yes;
             return track;
         }
     }
