@@ -35,9 +35,9 @@
 
     public class Image
     {
-        public object height { get; set; }
+        public int height { get; set; }
         public string url { get; set; }
-        public object width { get; set; }
+        public int width { get; set; }
     }
 
 }

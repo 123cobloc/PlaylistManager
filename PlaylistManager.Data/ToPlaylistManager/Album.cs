@@ -13,7 +13,7 @@
             Url = album?.external_urls?.spotify ?? "";
             Id = album?.id ?? "" ;
             Name = album?.name ?? "";
-            Image = album?.images?.FirstOrDefault()?.url;
+            Image = album?.images?.FirstOrDefault(x => x.width == 300)?.url ?? album?.images?.FirstOrDefault()?.url;
             Timestamp = timestamp;
         }
     }
