@@ -1,4 +1,6 @@
-﻿namespace PlaylistManager.Data.ToPlaylistManager
+﻿using PlaylistManager.Data.FromSpotify;
+
+namespace PlaylistManager.Data.ToPlaylistManager
 {
     public class Artist
     {
@@ -13,7 +15,7 @@
             Url = artist?.external_urls?.spotify ?? "";
             Id = artist?.id ?? "";
             Name = artist?.name ?? "";
-            Image = artist?.images?.FirstOrDefault()?.url;
+            Image = artist?.images?.FirstOrDefault(x => x.width == 300)?.url ?? artist?.images?.FirstOrDefault()?.url;
             Timestamp = timestamp;
         }
     }

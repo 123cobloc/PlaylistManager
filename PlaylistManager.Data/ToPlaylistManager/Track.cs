@@ -5,6 +5,7 @@
         public string Url { get; set; }
         public string Id { get; set; }
         public string Name { get; set; }
+        public string Image { get => Album.Image; }
         public List<Artist> Artists { get; set; }
         public Album Album { get; set; }
         public long? Timestamp { get; set; }

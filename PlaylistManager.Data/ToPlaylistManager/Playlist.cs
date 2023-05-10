@@ -17,7 +17,7 @@
         {
             Url = playlist.external_urls.spotify;
             Id = playlist.id;
-            Image = playlist.images.FirstOrDefault()?.url;
+            Image = playlist.images.FirstOrDefault(x => x.width == 300)?.url ?? playlist.images.FirstOrDefault()?.url;
             Name = playlist.name;
             Description = string.IsNullOrEmpty(playlist.description) ? null : playlist.description;
             IsMine = userId is null ? null : playlist.owner.id == userId;
