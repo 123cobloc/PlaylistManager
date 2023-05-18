@@ -19,6 +19,8 @@ builder.Services.AddEndpointsApiExplorer();
 
 builder.Configuration.AddAzureKeyVault(new Uri("https://playlistmanagerkv.vault.azure.net/"), new DefaultAzureCredential());
 
+Console.Error.WriteLine(builder.Configuration["cosmosConnectionString"]);
+
 builder.Services.AddDbContext<PlaylistManagerCosmos>(options =>
     options.UseCosmos(
         connectionString: builder.Configuration["cosmosConnectionString"],
