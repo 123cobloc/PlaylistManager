@@ -19,10 +19,6 @@ variables:
   # Agent VM image name
   vmImageName: 'ubuntu-latest'
 
-env:
-  AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
-  AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
-
 stages:
   - stage: Build
     displayName: Build and push stage
