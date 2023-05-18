@@ -21,7 +21,7 @@ builder.Configuration.AddAzureKeyVault(new Uri("https://playlistmanagerkv.vault.
 
 builder.Services.AddDbContext<PlaylistManagerCosmos>(options =>
     options.UseCosmos(
-        connectionString: builder.Configuration["cosmosConnection"],
+        connectionString: builder.Configuration["cosmosConnectionString"],
         databaseName: builder.Configuration["cosmosDatabase"]
     ));
 
