@@ -1,3 +1,4 @@
+using Azure.Identity;
 using Microsoft.EntityFrameworkCore;
 using PlaylistManager.Data;
 using PlaylistManager.Services;
@@ -16,10 +17,12 @@ builder.Services.AddControllers()
 builder.Services.AddSwaggerGen();
 builder.Services.AddEndpointsApiExplorer();
 
+builder.Configuration.AddAzureKeyVault(new Uri("https://playlistmanagerkv.vault.azure.net/"), new DefaultAzureCredential());
+
 builder.Services.AddDbContext<PlaylistManagerCosmos>(options =>
     options.UseCosmos(
-        connectionString: "AccountEndpoint=https://playlistmanager.documents.azure.com:443/;AccountKey=4ER3KwKDoedgYqHHOgKnVwdNhFu8f8MeU2ZKDy7YYrCr3Y5cP7DExfn2JTf7OITfOJQPZzBdoqBdACDbFIalqQ==;",
-        databaseName: "PlaylistManager"
+        connectionString: builder.Configuration["cosmosConnection"],
+        databaseName: builder.Configuration["cosmosDatabase"]
     ));
 
 
@@ -48,7 +51,7 @@ using (var scope = app.Services.CreateScope())
 
 app.UseCors(policy =>
 {
-    policy.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader();
+    policy.WithOrigins("https://mango-river-0fddba003.3.azurestaticapps.net/");
 });
 
 app.UseHttpsRedirection();
