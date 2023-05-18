@@ -17,9 +17,18 @@ builder.Services.AddControllers()
 builder.Services.AddSwaggerGen();
 builder.Services.AddEndpointsApiExplorer();
 
+DefaultAzureCredentialOptions defaultAzureCredentialOptions = new()
+{
+    ExcludeAzureCliCredential = false,
+    ExcludeEnvironmentCredential = true,
+    ExcludeInteractiveBrowserCredential = true,
+    ExcludeManagedIdentityCredential = true,
+    ExcludeSharedTokenCacheCredential = true,
+    ExcludeVisualStudioCodeCredential = true,
+    ExcludeVisualStudioCredential = true
+};
 
-
-builder.Configuration.AddAzureKeyVault(new Uri("https://playlistmanagerkv.vault.azure.net/"), new DefaultAzureCredential());
+builder.Configuration.AddAzureKeyVault(new Uri("https://playlistmanagerkv.vault.azure.net/"), new DefaultAzureCredential(defaultAzureCredentialOptions));
 
 Console.Error.WriteLine(builder.Configuration["cosmosConnectionString"]);
 
@@ -55,7 +64,7 @@ using (var scope = app.Services.CreateScope())
 
 app.UseCors(policy =>
 {
-    policy.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader();
+    policy.WithOrigins("https://mango-river-0fddba003.3.azurestaticapps.net/", "http://localhost:4200/").AllowAnyMethod().AllowAnyHeader();
 });
 
 app.UseHttpsRedirection();
