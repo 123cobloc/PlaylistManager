@@ -51,7 +51,7 @@ using (var scope = app.Services.CreateScope())
 
 app.UseCors(policy =>
 {
-    policy.WithOrigins("https://mango-river-0fddba003.3.azurestaticapps.net/");
+    policy.WithOrigins("https://mango-river-0fddba003.3.azurestaticapps.net/").AllowAnyMethod().AllowAnyHeader();
 });
 
 app.UseHttpsRedirection();
