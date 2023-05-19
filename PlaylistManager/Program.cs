@@ -2,6 +2,7 @@ using Azure.Identity;
 using Microsoft.EntityFrameworkCore;
 using PlaylistManager.Data;
 using PlaylistManager.Services;
+using System.Configuration;
 using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -17,26 +18,13 @@ builder.Services.AddControllers()
 builder.Services.AddSwaggerGen();
 builder.Services.AddEndpointsApiExplorer();
 
-DefaultAzureCredentialOptions defaultAzureCredentialOptions = new()
-{
-    ExcludeAzureCliCredential = false,
-    ExcludeEnvironmentCredential = true,
-    ExcludeInteractiveBrowserCredential = true,
-    ExcludeManagedIdentityCredential = true,
-    ExcludeSharedTokenCacheCredential = true,
-    ExcludeVisualStudioCodeCredential = true,
-    ExcludeVisualStudioCredential = true
-};
-
-builder.Configuration.AddAzureKeyVault(new Uri("https://playlistmanagerkv.vault.azure.net/"), new DefaultAzureCredential(defaultAzureCredentialOptions));
-
-Console.Error.WriteLine(builder.Configuration["cosmosConnectionString"]);
 
 builder.Services.AddDbContext<PlaylistManagerCosmos>(options =>
     options.UseCosmos(
-        connectionString: builder.Configuration["cosmosConnectionString"],
-        databaseName: builder.Configuration["cosmosDatabase"]
-    ));
+        connectionString: $"AccountEndpoint={builder.Configuration.GetSection("CosmosEndpointUri").Value};AccountKey={builder.Configuration.GetSection("CosmosPrimaryKey").Value};",
+        databaseName: builder.Configuration.GetSection("CosmosDatabaseName").Value
+    )
+);
 
 
 builder.Services.AddSingleton<Utils>();
