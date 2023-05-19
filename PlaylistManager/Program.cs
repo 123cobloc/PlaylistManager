@@ -18,11 +18,12 @@ builder.Services.AddControllers()
 builder.Services.AddSwaggerGen();
 builder.Services.AddEndpointsApiExplorer();
 
+builder.Configuration.AddAzureKeyVault(new Uri("https://playlistmanagerkv.vault.azure.net/"), new DefaultAzureCredential());
 
 builder.Services.AddDbContext<PlaylistManagerCosmos>(options =>
     options.UseCosmos(
-        connectionString: $"AccountEndpoint={builder.Configuration.GetSection("CosmosEndpointUri").Value};AccountKey={builder.Configuration.GetSection("CosmosPrimaryKey").Value};",
-        databaseName: builder.Configuration.GetSection("CosmosDatabaseName").Value
+        connectionString: $"AccountEndpoint={builder.Configuration["cosmosEndpointUri"]};AccountKey={builder.Configuration["cosmosPrimaryKey"]};",
+        databaseName: builder.Configuration["cosmosDatabase"]
     )
 );
 
