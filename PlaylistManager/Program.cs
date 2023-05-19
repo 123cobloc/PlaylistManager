@@ -52,7 +52,7 @@ using (var scope = app.Services.CreateScope())
 
 app.UseCors(policy =>
 {
-    policy.WithOrigins("https://mango-river-0fddba003.3.azurestaticapps.net/", "http://localhost:4200/").AllowAnyMethod().AllowAnyHeader();
+    policy.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader();
 });
 
 app.UseHttpsRedirection();
